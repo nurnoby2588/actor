@@ -31,7 +31,15 @@ const getSingleActor = (0, catchAsync_1.default)(async (req, res, next) => {
     });
 });
 const getAllActor = (0, catchAsync_1.default)(async (req, res, next) => {
-    const result = await actor_services_1.ActorService.getAllActor();
+    const search = req.query?.search;
+    const category = req.query?.category;
+    const limit = parseInt(req.query?.limit) || 10;
+    const page = parseInt(req.query?.page) || 1;
+    console.log(" page", page);
+    const skip = ((page - 1) * limit);
+    console.log("category", category);
+    const result = await actor_services_1.ActorService.getAllActor(search, category, limit, skip);
+    console.log(result);
     (0, sendResponse_1.default)(res, {
         statusCode: 200,
         success: true,

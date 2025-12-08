@@ -85,7 +85,7 @@ const actorSchema = new mongoose_1.Schema({
         },
     },
     youtubeLink: [{ type: String }],
-    category: { enum: ["A", "b"], type: String },
+    category: { enum: ["A", "B"], type: String },
 }, { timestamps: true });
 const Actor = mongoose_1.default.model("Actor", actorSchema);
 exports.default = Actor;

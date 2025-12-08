@@ -70,13 +70,49 @@ const getSingleActor = async (actorId: string) => {
   }
   return actor;
 };
-const getAllActor = async () => {
-  const actor = await Actor.find();
-  if (actor.length === 0) {
-    throw new Error("Actor not found");
+
+
+const getAllActor = async (search: string, category: string, limit: number, skip: number) => {
+  console.log(category)
+  console.log(skip)
+  let filter: any = {};
+  const fields = ["fullName", "presentAddress", "idNo", "phoneNumber"];
+  if (search) {
+    filter.$or = fields.map((field) => ({ [field]: { $regex: search.trim(), $options: "i" } }))
   }
-  return actor;
+  if (category === "A" || category === "B") {
+    filter.category = category
+  }
+
+  const actor = await Actor.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 });
+
+  const [totalActor, categoryACount, categoryBCount] = await Promise.all(
+    [
+      Actor.countDocuments(),
+      Actor.countDocuments({ category: "A" }),
+      Actor.countDocuments({ category: "B" })
+    ]
+  )
+  const totalPage = Math.ceil((category === "A" ? categoryACount : (category === "B" ? categoryBCount : totalActor)) / limit)
+
+  // if (category === "A" || category === "B") {
+
+  //   return {
+  //     actor: actor.filter(a => a.category === category),
+  //     totalActor,
+  //     categoryACount,
+  //     categoryBCount,
+  //     totalPage
+  //   }
+  // }
+
+
+  if (actor.length === 0) {
+    return { actor: [], totalActor, categoryACount, categoryBCount, totalPage };
+  }
+  return { actor, totalActor, categoryACount, categoryBCount, totalPage };
 };
+
 const filterByRank = async (rank: string) => {
   if (!rank) {
     throw new Error("No rank provided");
@@ -84,7 +120,11 @@ const filterByRank = async (rank: string) => {
   const actor = await Actor.find({ rank: rank });
   console.log("actor", actor);
   if (actor.length === 0) {
-    throw new Error("Actor not found");
+    return {
+      success: true,
+      message: "No data found",
+      data: [],
+    };
   }
   return actor;
 };

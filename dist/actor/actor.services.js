@@ -71,12 +71,37 @@ const getSingleActor = async (actorId) => {
     }
     return actor;
 };
-const getAllActor = async () => {
-    const actor = await actor_schema_1.default.find();
-    if (actor.length === 0) {
-        throw new Error("Actor not found");
+const getAllActor = async (search, category, limit, skip) => {
+    console.log(category);
+    console.log(skip);
+    let filter = {};
+    const fields = ["fullName", "presentAddress", "idNo", "phoneNumber"];
+    if (search) {
+        filter.$or = fields.map((field) => ({ [field]: { $regex: search.trim(), $options: "i" } }));
     }
-    return actor;
+    if (category === "A" || category === "B") {
+        filter.category = category;
+    }
+    const actor = await actor_schema_1.default.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 });
+    const [totalActor, categoryACount, categoryBCount] = await Promise.all([
+        actor_schema_1.default.countDocuments(),
+        actor_schema_1.default.countDocuments({ category: "A" }),
+        actor_schema_1.default.countDocuments({ category: "B" })
+    ]);
+    const totalPage = Math.ceil((category === "A" ? categoryACount : (category === "B" ? categoryBCount : totalActor)) / limit);
+    // if (category === "A" || category === "B") {
+    //   return {
+    //     actor: actor.filter(a => a.category === category),
+    //     totalActor,
+    //     categoryACount,
+    //     categoryBCount,
+    //     totalPage
+    //   }
+    // }
+    if (actor.length === 0) {
+        return { actor: [], totalActor, categoryACount, categoryBCount, totalPage };
+    }
+    return { actor, totalActor, categoryACount, categoryBCount, totalPage };
 };
 const filterByRank = async (rank) => {
     if (!rank) {
@@ -85,7 +110,11 @@ const filterByRank = async (rank) => {
     const actor = await actor_schema_1.default.find({ rank: rank });
     console.log("actor", actor);
     if (actor.length === 0) {
-        throw new Error("Actor not found");
+        return {
+            success: true,
+            message: "No data found",
+            data: [],
+        };
     }
     return actor;
 };

@@ -2,6 +2,8 @@ import { NextFunction, Request, Response } from "express";
 import sendResponse from "../shared/sendResponse";
 import { ActorService } from "./actor.services";
 import catchAsync from "../shared/catchAsync";
+import { AppError } from "../middleware/error";
+import { skip } from "node:test";
 
 const createActor = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
@@ -37,7 +39,15 @@ const getSingleActor = catchAsync(
 );
 const getAllActor = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
-    const result = await ActorService.getAllActor();
+    const search = req.query?.search as string;
+    const category = req.query?.category as string;
+    const limit = parseInt(req.query?.limit as string) || 10;
+    const page = parseInt(req.query?.page as string) || 1;
+    console.log(" page", page)
+    const skip = ((page - 1) * limit)
+    console.log("category", category)
+    const result = await ActorService.getAllActor(search, category, limit, skip);
+    console.log(result)
     sendResponse(res, {
       statusCode: 200,
       success: true,
@@ -49,7 +59,7 @@ const getAllActor = catchAsync(
 const filterByRank = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const rank = req.params.rank;
-    console.log("rank",rank)
+    console.log("rank", rank)
     const result = await ActorService.filterByRank(rank);
     sendResponse(res, {
       statusCode: 200,

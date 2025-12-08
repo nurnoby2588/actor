@@ -7,6 +7,7 @@ const express_1 = __importDefault(require("express"));
 const admin_controller_1 = require("./admin.controller");
 const adminRouter = express_1.default.Router();
 adminRouter.post("/", admin_controller_1.AdminController.createAdmin);
+adminRouter.post("/add-actor", admin_controller_1.AdminController.addActor);
 adminRouter.get('/', admin_controller_1.AdminController.getAdmin);
 adminRouter.put('/:id', admin_controller_1.AdminController.readNotificaton);
 exports.default = adminRouter;

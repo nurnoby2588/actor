@@ -40,9 +40,23 @@ const readNotificaton = catchAsync(
     });
   }
 );
+const addActor = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("object")
+    const data = req.body;
+    const result = await AdminService.addActor(data);
+    sendResponse(res, {
+      statusCode: 201,
+      success: true,
+      message: "Actor profile filled up successfully",
+      data: result,
+    });
+  }
+);
 
 export const AdminController = {
   createAdmin,
   getAdmin,
   readNotificaton,
+  addActor,
 };

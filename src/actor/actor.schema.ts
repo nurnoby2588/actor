@@ -63,7 +63,7 @@ const actorSchema = new Schema<IActor>(
       },
     },
     youtubeLink: [{ type: String }],
-    category: { enum: ["A", "b"], type: String },
+    category: { enum: ["A", "B"], type: String },
   },
   { timestamps: true }
 );
