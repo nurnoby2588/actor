@@ -6,7 +6,7 @@ import adminRouter from "./admin/admin.router";
 import notificationRouter from "./notification/notification.router";
 
 const app = express();
-const allowedOrigins = ["http://localhost:3000", "https://from-control.vercel.app"];
+const allowedOrigins = ["http://localhost:4000", "https://from-control.vercel.app"];
 // Middleware
 app.use(express.json());
 app.use(cors({

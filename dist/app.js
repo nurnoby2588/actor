@@ -10,7 +10,7 @@ const actor_router_1 = __importDefault(require("./actor/actor.router"));
 const admin_router_1 = __importDefault(require("./admin/admin.router"));
 const notification_router_1 = __importDefault(require("./notification/notification.router"));
 const app = (0, express_1.default)();
-const allowedOrigins = ["http://localhost:3000", "https://your-frontend-domain.com"];
+const allowedOrigins = ["http://localhost:4000", "https://from-control.vercel.app"];
 // Middleware
 app.use(express_1.default.json());
 app.use((0, cors_1.default)({
