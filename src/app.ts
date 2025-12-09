@@ -9,11 +9,7 @@ const app = express();
 const allowedOrigins = ["https://from-control.vercel.app"];
 // Middleware
 app.use(express.json());
-app.use(cors({
-  origin: allowedOrigins,
-  methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
-  credentials: true, // Allow cookies if needed
-}));
+app.use(cors());
 // Set custom headers for CORS
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", "https://from-control.vercel.app"); // Replace with your frontend domain
