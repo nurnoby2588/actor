@@ -7,9 +7,11 @@ const createNotification = async () => {
   };
 };
 const getNotification = async () => {
-  return {
-    msg: "Notification fetched",
-  };
+  const notification = await Notification.find();
+  if (!notification) {
+    throw new AppError(404, "No notifications found");
+  }
+  return notification;
 };
 const getAdminNotification = async (adminId: string) => {
   if (!adminId) {
