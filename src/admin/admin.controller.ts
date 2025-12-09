@@ -58,6 +58,7 @@ const updateActor = catchAsync(
     console.log("object")
     const data = req.body;
     const id = req.params.id;
+    console.log(id)
     const result = await AdminService.updateActor(data,id);
     sendResponse(res, {
       statusCode: 201,
