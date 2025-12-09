@@ -56,6 +56,25 @@ const getAllActor = catchAsync(
     });
   }
 );
+const updateActor = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const search = req.query?.search as string;
+    const category = req.query?.category as string;
+    const limit = parseInt(req.query?.limit as string) || 10;
+    const page = parseInt(req.query?.page as string) || 1;
+    console.log(" page", page)
+    const skip = ((page - 1) * limit)
+    console.log("category", category)
+    const result = await ActorService.getAllActor(search, category, limit, skip);
+    console.log(result)
+    sendResponse(res, {
+      statusCode: 200,
+      success: true,
+      message: "All actor fetch successfully",
+      data: result,
+    });
+  }
+);
 const filterByRank = catchAsync(
   async (req: Request, res: Response, next: NextFunction) => {
     const rank = req.params.rank;
@@ -89,4 +108,5 @@ export const ActorController = {
   getAllActor,
   filterByRank,
   adminFillUpActorProfile,
+  updateActor
 };

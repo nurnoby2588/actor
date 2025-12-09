@@ -43,10 +43,29 @@ const addActor = async (actorData: any) => {
   }
   return result;
 };
+const updateActor = async (actorData: any, id: string) => {
+  const actorProfile = {
+    phoneNumber: actorData.phoneNumber,
+    presentAddress: actorData.presentAddress,
+    dob: actorData.dob,
+    bloodGroup: actorData.bloodGroup,
+    idNo: actorData.idNo,
+    fullName: actorData.fullName,
+    category: actorData.category,
+  };
+  console.log(actorData);
+  const result = await Actor.findByIdAndUpdate(id, actorProfile);
+  console.log(result)
+  if (!result) {
+    throw new Error("Failed to fill up actor profile");
+  }
+  return result;
+};
 
 export const AdminService = {
   createAdmin,
   getAdmin,
   readAdmin,
   addActor,
+  updateActor
 };

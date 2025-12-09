@@ -53,10 +53,25 @@ const addActor = catchAsync(
     });
   }
 );
+const updateActor = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    console.log("object")
+    const data = req.body;
+    const id = req.params.id;
+    const result = await AdminService.updateActor(data,id);
+    sendResponse(res, {
+      statusCode: 201,
+      success: true,
+      message: "Actor profile filled up successfully",
+      data: result,
+    });
+  }
+);
 
 export const AdminController = {
   createAdmin,
   getAdmin,
   readNotificaton,
   addActor,
+  updateActor
 };
