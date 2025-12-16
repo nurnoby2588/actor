@@ -10,17 +10,14 @@ const actor_router_1 = __importDefault(require("./actor/actor.router"));
 const admin_router_1 = __importDefault(require("./admin/admin.router"));
 const notification_router_1 = __importDefault(require("./notification/notification.router"));
 const app = (0, express_1.default)();
-const allowedOrigins = ["http://localhost:4000", "https://from-control.vercel.app"];
+const allowedOrigins = ["https://from-control.vercel.app"];
 // Middleware
 app.use(express_1.default.json());
-app.use((0, cors_1.default)({
-    origin: allowedOrigins,
-    methods: ["GET", "POST", "PUT", "DELETE"], // Specify allowed methods
-    credentials: true, // Allow cookies if needed
-}));
+app.use((0, cors_1.default)());
 // Set custom headers for CORS
 app.use((req, res, next) => {
-    res.setHeader("Access-Control-Allow-Origin", "https://from-control.vercel.app"); // Replace with your frontend domain
+    // res.setHeader("Access-Control-Allow-Origin", "https://from-control.vercel.app"); // Replace with your frontend domain
+    res.setHeader("Access-Control-Allow-Origin", "*"); // Replace with your frontend domain
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
     res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
     res.setHeader("Access-Control-Allow-Credentials", "true");

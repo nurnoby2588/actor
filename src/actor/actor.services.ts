@@ -70,7 +70,14 @@ const getSingleActor = async (actorId: string) => {
   }
   return actor;
 };
-
+const role = [
+  "Producer",
+  "Actor",
+  "Cinematographer",
+  "Screenwriter",
+  "Editor",
+  "Director",
+]
 
 const getAllActor = async (search: string, category: string, limit: number, skip: number) => {
   console.log(category)
@@ -80,11 +87,33 @@ const getAllActor = async (search: string, category: string, limit: number, skip
   if (search) {
     filter.$or = fields.map((field) => ({ [field]: { $regex: search.trim(), $options: "i" } }))
   }
-  if (category === "A" || category === "B") {
-    filter.category = category
-  }
+  console.log(search)
+  // if (category === "A" || category === "B") {
+  //   filter.category = category
+  // }
 
-  const actor = await Actor.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 });
+  const actor = await Actor.aggregate([
+    { $match: filter },
+    {
+      $addFields: {
+        orderByRole: {
+          $cond: {
+            if: { $in: ["$idNo", role] },
+            then: { $indexOfArray: [role, "$idNo"] },
+            else: 999
+          }
+
+        }
+      }
+    },
+    { $sort: { orderByRole: 1 } },
+    { $skip: skip },
+    { $limit: limit }
+
+  ])
+  console.log(actor)
+
+  // const actor = await Actor.find(filter).skip(skip).limit(limit);
 
   const [totalActor, categoryACount, categoryBCount] = await Promise.all(
     [

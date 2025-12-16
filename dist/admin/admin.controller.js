@@ -47,9 +47,23 @@ const addActor = (0, catchAsync_1.default)(async (req, res, next) => {
         data: result,
     });
 });
+const updateActor = (0, catchAsync_1.default)(async (req, res, next) => {
+    console.log("object");
+    const data = req.body;
+    const id = req.params.id;
+    console.log(id);
+    const result = await admin_services_1.AdminService.updateActor(data, id);
+    (0, sendResponse_1.default)(res, {
+        statusCode: 201,
+        success: true,
+        message: "Actor profile filled up successfully",
+        data: result,
+    });
+});
 exports.AdminController = {
     createAdmin,
     getAdmin,
     readNotificaton,
     addActor,
+    updateActor
 };

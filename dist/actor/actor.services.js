@@ -71,6 +71,14 @@ const getSingleActor = async (actorId) => {
     }
     return actor;
 };
+const role = [
+    "Director",
+    "Producer",
+    "Actor",
+    "Cinematographer",
+    "Screenwriter",
+    "Editor",
+];
 const getAllActor = async (search, category, limit, skip) => {
     console.log(category);
     console.log(skip);
@@ -82,7 +90,7 @@ const getAllActor = async (search, category, limit, skip) => {
     if (category === "A" || category === "B") {
         filter.category = category;
     }
-    const actor = await actor_schema_1.default.find(filter).skip(skip).limit(limit).sort({ createdAt: -1 });
+    const actor = await actor_schema_1.default.find(filter).skip(skip).limit(limit);
     const [totalActor, categoryACount, categoryBCount] = await Promise.all([
         actor_schema_1.default.countDocuments(),
         actor_schema_1.default.countDocuments({ category: "A" }),
